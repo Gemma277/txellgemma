@@ -1,7 +1,40 @@
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    projectile = sprites.createProjectileFromSprite(img`
+        .............ccfff..............
+        ...........ccddbcf..............
+        ..........ccddbbf...............
+        ..........fccbbcf...............
+        .....fffffccccccff.........ccc..
+        ...ffbbbbbbbcbbbbcfff....ccbbc..
+        ..fbbbbbbbbcbcbbbbcccff.cdbbc...
+        ffbbbbbbffbbcbcbbbcccccfcdbbf...
+        fbcbbb11ff1bcbbbbbcccccffbbf....
+        fbbb11111111bbbbbcccccccbbcf....
+        .fb11133cc11bbbbcccccccccccf....
+        ..fccc31c111bbbcccccbdbffbbcf...
+        ...fc13c111cbbbfcddddcc..fbbf...
+        ....fccc111fbdbbccdcc.....fbbf..
+        ........ccccfcdbbcc........fff..
+        .............fffff..............
+        `, mySprite, 0, -50)
+    music.pewPew.play()
+})
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
+    ASTEROIDE.destroy()
+    otherSprite.destroy(effects.confetti, 500)
+    info.changeScoreBy(1)
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
+    info.changeLifeBy(-1)
+    otherSprite.destroy(effects.fire, 500)
+    scene.cameraShake(4, 500)
+})
 let ASTEROIDE: Sprite = null
+let projectile: Sprite = null
+let mySprite: Sprite = null
 game.splash("BENVINGUTS A L'ESPAI", "Apreta A per començar i B per disparar")
 effects.starField.startScreenEffect()
-let mySprite = sprites.create(img`
+mySprite = sprites.create(img`
     . . . . . . . . . . . 6 6 6 6 6 
     . . . . . . . . . 6 6 7 7 7 7 3 
     . . . . . . 3 3 3 7 7 3 3 6 3 3 
@@ -26,20 +59,22 @@ info.setLife(5)
 game.onUpdateInterval(1000, function () {
     ASTEROIDE = sprites.createProjectileFromSide(img`
         . . . . . . . . . . . . . . . . 
-        . . . . . . 6 6 6 6 . . . . . . 
-        . . . . 6 6 6 5 5 6 6 6 . . . . 
-        . . . . 7 7 7 6 6 6 6 6 6 . . . 
-        . . 6 7 . . . 8 8 8 1 1 6 6 . . 
-        . . . . . . 7 . . . 1 1 5 6 . . 
-        . . . . . . . . 8 8 . . . 6 6 . 
+        . . . . . . 4 4 4 4 . . . . . . 
+        . . . . 4 4 4 5 5 4 4 4 . . . . 
+        . . . 3 3 3 3 4 4 4 4 4 4 . . . 
+        . . 4 3 3 3 3 2 2 2 1 1 4 4 . . 
+        . . 3 3 3 3 3 2 2 2 1 1 5 4 . . 
+        . 4 3 3 3 3 2 2 2 2 2 5 5 4 4 . 
+        . 4 3 3 3 2 2 2 4 4 4 4 5 4 4 . 
+        . 4 4 3 3 2 2 4 4 4 4 4 4 4 4 . 
+        . 4 2 3 3 2 2 4 4 4 4 4 4 4 4 . 
+        . . 4 2 3 3 2 4 4 4 4 4 2 4 . . 
+        . . 4 2 2 3 2 2 4 4 4 2 4 4 . . 
+        . . . 4 2 2 2 2 2 2 2 2 4 . . . 
+        . . . . 4 4 2 2 2 2 4 4 . . . . 
+        . . . . . . 4 4 4 4 . . . . . . 
         . . . . . . . . . . . . . . . . 
-        . c . . . . . . . . . 6 6 6 6 . 
-        . c . . . . . . . . . . . 6 6 . 
-        . . 6 8 7 . . . . . . . . . . . 
-        . . 6 8 8 . . . . . 6 . . 6 . . 
-        . . . 6 8 8 . 8 . . . . . . . . 
-        . . . . 6 6 8 . 8 8 . . . . . . 
-        . . . . . . 6 6 . 6 . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        `, 50, 50)
+        `, 0, 50)
+    ASTEROIDE.x += randint(0, scene.screenWidth())
+    ASTEROIDE.setKind(SpriteKind.Enemy)
 })
